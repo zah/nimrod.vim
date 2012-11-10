@@ -1,6 +1,0 @@
-This is a mirror of http://www.vim.org/scripts/script.php?script_id=2632
-
-Syntax file for Nimrod.
-
-This file is basically a modified python.vim (http://www.vim.org/scripts/script.php?script_id=790) ... you might recognize it.
-I have no idea if it works because I haven't actually tried to code in Nimrod and have next to nothing to test it with :P
