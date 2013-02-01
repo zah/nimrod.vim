@@ -119,7 +119,10 @@ if nimrod_highlight_exceptions == 1
   syn keyword nimrodException EControlC EInvalidValue EOutOfMemory EInvalidIndex
   syn keyword nimrodException EInvalidField EOutOfRange EStackOverflow
   syn keyword nimrodException ENoExceptionToReraise EInvalidObjectAssignment
-  syn keyword nimrodException EInvalidObject
+  syn keyword nimrodException EInvalidObject EInvalidLibrary EInvalidKey
+  syn keyword nimrodException EInvalidObjectConversion EFloatingPoint
+  syn keyword nimrodException EFloatInvalidOp EFloatDivByZero EFloatOverflow
+  syn keyword nimrodException EFloatInexact EDeadThread
 endif
 
 if nimrod_highlight_space_errors == 1
