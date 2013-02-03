@@ -62,7 +62,7 @@ let g:nimrod_symbol_types = {
 
 fun! NimExec(op)
   let cmd = printf("nimrod idetools %s --track:\"%s,%d,%d\" \"%s\"",
-            \ a:op, expand('%:p'), line('.'), col('.'), CurrentNimrodFile())
+            \ a:op, expand('%:p'), line('.'), col('.')-1, CurrentNimrodFile())
 
   call add(g:nim_log, cmd)
   let output = system(cmd)
