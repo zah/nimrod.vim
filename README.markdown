@@ -70,3 +70,17 @@ Other recomended Vim plugins
 
 * https://github.com/scrooloose/syntastic (copied bits from its readme)
 * https://github.com/Shougo/neocomplcache
+
+If something goes wrong
+-----------------------
+
+Since you are using vim, on source code which might have syntax problems,
+invoking an external tool which may have its own share of bugs, sometimes stuff
+just doesn't work as expected. In these situations if you want to debug the
+issue you can type ``:e log://nimrod`` and a buffer will open with the log of
+the plugin's invocations and nimrod's idetool answers.
+
+This can give you a hint of where the problem is and allow you to easily
+reproduce on the commandline the idetool parameters the vim plugin is
+generating so you can prepare a test case for either this plugin or the nimrod
+compiler.
