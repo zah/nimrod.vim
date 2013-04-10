@@ -114,7 +114,7 @@ fun! GotoDefinition_nimrod()
   let defBits = split(rawDef, '\t')
   let file = defBits[4]
   let line = defBits[5]
-  exe printf("silent! e +%d %s", line, file)
+  exe printf("e +%d %s", line, file)
   return 1
 endf
 
