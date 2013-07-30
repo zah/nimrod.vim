@@ -99,17 +99,8 @@ let g:nimrod_symbol_types = {
   \ }
 
 fun! NimExec(op)
-  let isDirty = getbufvar(bufnr('%'), "&modified")
-  if isDirty
-    let tmp = tempname() . bufname("%") . "_dirty.nim"
-    silent! exe ":w " . tmp
-
-    let cmd = printf("idetools %s --trackDirty:\"%s,%s,%d,%d\" \"%s\"",
-      \ a:op, tmp, expand('%:p'), line('.'), col('.')-1, s:CurrentNimrodFile())
-  else
-    let cmd = printf("idetools %s --track:\"%s,%d,%d\" \"%s\"",
-      \ a:op, expand('%:p'), line('.'), col('.')-1, s:CurrentNimrodFile())
-  endif
+  let cmd = printf("idetools %s --track:\"%s,%d,%d\" \"%s\"",
+    \ a:op, expand('%:p'), line('.'), col('.')-1, s:CurrentNimrodFile())
 
   if b:nimrod_caas_enabled
     exe printf("py nimExecCmd('%s', '%s', False)", b:nimrod_project_root, cmd)
