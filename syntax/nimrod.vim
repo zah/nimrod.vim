@@ -88,8 +88,8 @@ if nimrod_highlight_builtins == 1
   syn keyword nimrodBuiltin int int8 int16 int32 int64 uint uint8 uint16 uint32 uint64 float float32 float64 bool
   syn keyword nimrodBuiltin char string cstring pointer range array openarray seq
   syn keyword nimrodBuiltin set Byte Natural Positive TObject PObject Conversion TResult TAddress
-  syn keyword nimrodBuiltin BiggestInt BiggestFloat cchar cschar cshort cint
-  syn keyword nimrodBuiltin clong clonglong cfloat cdouble clongdouble
+  syn keyword nimrodBuiltin BiggestInt BiggestFloat cchar cschar cshort cint csize cuchar cushort
+  syn keyword nimrodBuiltin clong clonglong cfloat cdouble clongdouble cuint culong culonglong cchar
   syn keyword nimrodBuiltin cstringArray TEndian PFloat32 PFloat64 PInt64 PInt32
   syn keyword nimrodBuiltin TGC_Strategy TFile TFileMode TFileHandle isMainModule
   syn keyword nimrodBuiltin CompileDate CompileTime NimrodVersion NimrodMajor
