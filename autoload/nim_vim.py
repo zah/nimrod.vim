@@ -75,7 +75,7 @@ def nimRestartService(project):
   nimTerminateService(project)
   nimStartService(project)
 
-NimLog = open(''.join([tempfile.gettempdir(), "nim-log.txt"]), "w")
+NimLog = open(os.path.join(tempfile.gettempdir(), "nim-log.txt"), "w")
 
 def nimExecCmd(project, cmd, async = True):
   target = None
