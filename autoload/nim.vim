@@ -139,7 +139,7 @@ fun! NimComplete(findstart, base)
     endif
 
     let curline = getline(line('.'))
-    return curcol - match(reverse(split(curline, '\zs')), '[^0-9a-zA-Z_]') - 1
+    return curcol - match(reverse(split(curline, '\zs')), '\W') - 1
   else
     let result = []
     let sugOut = NimExec("--suggest")
