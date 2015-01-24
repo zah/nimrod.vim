@@ -149,7 +149,7 @@ fun! NimComplete(findstart, base)
       let lineData = split(line, '\t')
       if len(lineData) > 0 && lineData[0] == "sug"
         let word = lineData[2]
-        if a:base ==# word[: baselen - 1]
+        if a:base ==# word[: baselen - 1]  || baselen == 0
           let kind = get(g:nim_symbol_types, lineData[1], '')
           let c = { 'word': word, 'kind': kind, 'menu': lineData[3], 'dup': 1 }
           call add(result, c)
