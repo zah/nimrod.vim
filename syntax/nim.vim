@@ -11,7 +11,7 @@ if !exists("nim_highlight_numbers")
   let nim_highlight_numbers = 1
 endif
 if !exists("nim_highlight_builtins")
-  let nim_highlight_builtins = 1
+  let nim_highlight_builtins = 0
 endif
 if !exists("nim_highlight_exceptions")
   let nim_highlight_exceptions = 1
@@ -22,7 +22,7 @@ endif
 
 if exists("nim_highlight_all")
   let nim_highlight_numbers      = 1
-  let nim_highlight_builtins     = 1
+  let nim_highlight_builtins     = 0
   let nim_highlight_exceptions   = 1
   let nim_highlight_space_errors = 1
 endif
