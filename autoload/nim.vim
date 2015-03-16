@@ -15,7 +15,7 @@ fun! nim#init()
   let cmd = printf("nim --dump.format:json --verbosity:0 dump %s", s:CurrentNimFile())
   let raw_dumpdata = system(cmd)
   if !v:shell_error
-    let dumpdata = eval(substitute(raw_dumpdata, "\n", "", "g"))
+    let dumpdata = eval(substitute(raw_dumpdata, '\(\r\|\n\)', "", "g"))
     
     let b:nim_project_root = dumpdata['project_path']
     let b:nim_defined_symbols = dumpdata['defined_symbols']
