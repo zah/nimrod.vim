@@ -19,12 +19,16 @@ endif
 if !exists("nim_highlight_space_errors")
   let nim_highlight_space_errors = 1
 endif
+if !exists("nim_highlight_special_vars")
+  let nim_highlight_special_vars = 1
+endif
 
 if exists("nim_highlight_all")
   let nim_highlight_numbers      = 1
   let nim_highlight_builtins     = 1
   let nim_highlight_exceptions   = 1
   let nim_highlight_space_errors = 1
+  let nim_highlight_special_vars = 1
 endif
 
 syn region nimBrackets       contained extend keepend matchgroup=Bold start=+\(\\\)\@<!\[+ end=+]\|$+ skip=+\\\s*$\|\(\\\)\@<!\\]+ contains=@tclCommandCluster
@@ -137,6 +141,10 @@ if nim_highlight_space_errors == 1
   syn match   nimSpaceError   display "\t"
 endif
 
+if nim_highlight_special_vars
+  syn keyword nimSpecialVar result
+endif
+
 syn sync match nimSync grouphere NONE "):$"
 syn sync maxlines=200
 syn sync minlines=2000
@@ -164,6 +172,7 @@ if version >= 508 || !exists("did_nim_syn_inits")
   HiLink nimComment		    Comment
   HiLink nimTodo		        Todo
   HiLink nimDecorator	    Define
+  HiLink nimSpecialVar	    Identifier
   
   if nim_highlight_numbers == 1
     HiLink nimNumber	Number
