@@ -35,7 +35,7 @@ syn keyword nimKeyword       case cast const continue converter
 syn keyword nimKeyword       discard distinct div do
 syn keyword nimKeyword       elif else end enum except export
 syn keyword nimKeyword       finally for from
-syn keyword nimKeyword       generic
+syn keyword nimKeyword       generic concept
 syn keyword nimKeyword       if import in include interface is isnot iterator
 syn keyword nimKeyword       lambda let
 syn keyword nimKeyword       mixin using mod
