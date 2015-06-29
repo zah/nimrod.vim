@@ -16,6 +16,10 @@ setlocal omnifunc=NimComplete
 setlocal suffixesadd=.nim 
 setlocal expandtab  "Make sure that only spaces are used
 
+setl tabstop=2
+setl softtabstop=2
+setl shiftwidth=2
+
 compiler nim
 
 let &cpo = s:cpo_save
