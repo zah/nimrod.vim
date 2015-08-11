@@ -75,7 +75,12 @@ def nimRestartService(project):
   nimTerminateService(project)
   nimStartService(project)
 
-NimLog = open("/tmp/nim-log.txt", "w")
+import platform
+if(platform.system() == "Windows"):
+  NimLog = open(os.path.expanduser('~') + "./vimdata/nim-log.txt", "w")
+else:
+  NimLog = open("/tmp/nim-log.txt", "w")
+  
 
 def nimExecCmd(project, cmd, async = True):
   target = None

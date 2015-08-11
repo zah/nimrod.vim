@@ -1,5 +1,5 @@
 let g:nim_log = []
-let s:plugin_path = escape(expand('<sfile>:p:h'), ' \')
+let s:plugin_path = escape(expand('<sfile>:p:h'), '\')
 
 if !exists("g:nim_caas_enabled")
   let g:nim_caas_enabled = 0
