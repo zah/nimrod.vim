@@ -1,4 +1,4 @@
-import threading, Queue, subprocess, signal, os
+import threading, Queue, subprocess, signal, os, tempfile
 
 try:
   import vim
@@ -6,7 +6,7 @@ except ImportError:
   class Vim:
     def command(self, x):
       print("Executing vim command: " + x)
-  
+
   vim = Vim()
 
 class NimThread(threading.Thread):
@@ -22,7 +22,7 @@ class NimThread(threading.Thread):
        stderr = subprocess.STDOUT,
        universal_newlines = True,
        bufsize = 1)
- 
+
   def postNimCmd(self, msg, async = True):
     self.tasks.put((msg, async))
     if not async:
@@ -38,7 +38,7 @@ class NimThread(threading.Thread):
 
       self.nim.stdin.write(msg + "\n")
       result = ""
-      
+
       while True:
         line = self.nim.stdout.readline()
         result += line
@@ -48,7 +48,7 @@ class NimThread(threading.Thread):
           else:
             self.asyncOpComplete(msg, result)
           break
-        
+
 
 def nimVimEscape(expr):
   return expr.replace("\\", "\\\\").replace('"', "\\\"").replace("\n", "\\n")
@@ -75,7 +75,8 @@ def nimRestartService(project):
   nimTerminateService(project)
   nimStartService(project)
 
-NimLog = open("/tmp/nim-log.txt", "w")
+NimLogPath = os.path.join(tempfile.gettempdir(), 'nim-log.txt')
+NimLog = open(NimLogPath, "w")
 
 def nimExecCmd(project, cmd, async = True):
   target = None
@@ -83,16 +84,16 @@ def nimExecCmd(project, cmd, async = True):
     target = NimProjects[project]
   else:
     target = nimStartService(project)
-  
+
   result = target.postNimCmd(cmd, async)
   if result != None:
     NimLog.write(result)
     NimLog.flush()
-  
+
   if not async:
     vim.command('let l:py_res = "' + nimVimEscape(result) + '"')
 
 def nimTerminateAll():
   for thread in NimProjects.values():
     thread.postNimCmd("quit")
-    
+
