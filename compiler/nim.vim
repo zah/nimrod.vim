@@ -11,12 +11,12 @@ endif
 let s:cpo_save = &cpo
 set cpo-=C
 
-CompilerSet makeprg=nim\ c\ $*
+CompilerSet makeprg=nim\ c\ --verbosity:0\ $*\ %:p
 
 CompilerSet errorformat=
   \%-GHint:\ %m,
-  \%E%f(%l\\,\ %c)\ Error:\ %m,
-  \%W%f(%l\\,\ %c)\ Hint:\ %m
+  \%E%f(%l\\,\ %c)\ Error:\ %m
+  "\%W%f(%l\\,\ %c)\ Hint:\ %m
 
 let &cpo = s:cpo_save
 unlet s:cpo_save

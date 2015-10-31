@@ -1,5 +1,5 @@
 let g:nim_log = []
-let s:plugin_path = escape(expand('<sfile>:p:h'), ' \')
+let s:plugin_path = escape(expand('<sfile>:p:h'), '\')
 
 if !exists("g:nim_caas_enabled")
   let g:nim_caas_enabled = 0
@@ -14,7 +14,7 @@ exe 'pyfile ' . fnameescape(s:plugin_path) . '/nim_vim.py'
 fun! nim#init()
   let cmd = printf("nim --dump.format:json --verbosity:0 dump %s", s:CurrentNimFile())
   let raw_dumpdata = system(cmd)
-  if !v:shell_error
+  if !v:shell_error && expand("%:e") == "nim"
     let dumpdata = eval(substitute(raw_dumpdata, "\n", "", "g"))
     
     let b:nim_project_root = dumpdata['project_path']
