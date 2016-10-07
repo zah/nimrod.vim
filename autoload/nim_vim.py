@@ -1,19 +1,19 @@
-import threading, Queue, subprocess, signal, os, platform, getpass
+import threading, queue, subprocess, signal, os, platform, getpass
 
 try:
   import vim
 except ImportError:
   class Vim:
     def command(self, x):
-      print("Executing vim command: " + x)
+      print(("Executing vim command: " + x))
   
   vim = Vim()
 
 class NimThread(threading.Thread):
   def __init__(self, project_path):
     super(NimThread, self).__init__()
-    self.tasks = Queue.Queue()
-    self.responses = Queue.Queue()
+    self.tasks = queue.Queue()
+    self.responses = queue.Queue()
     self.nim = subprocess.Popen(
        ["nim", "serve", "--server.type:stdin", project_path],
        cwd = os.path.dirname(project_path),
@@ -67,7 +67,7 @@ def nimStartService(project):
   return target
 
 def nimTerminateService(project):
-  if NimProjects.has_key(project):
+  if project in NimProjects:
     NimProjects[project].postNimCmd("quit")
     del NimProjects[project]
 
@@ -77,7 +77,7 @@ def nimRestartService(project):
 
 def nimExecCmd(project, cmd, async = True):
   target = None
-  if NimProjects.has_key(project):
+  if project in NimProjects:
     target = NimProjects[project]
   else:
     target = nimStartService(project)
@@ -88,6 +88,6 @@ def nimExecCmd(project, cmd, async = True):
     vim.command('let l:py_res = "' + nimVimEscape(result) + '"')
 
 def nimTerminateAll():
-  for thread in NimProjects.values():
+  for thread in list(NimProjects.values()):
     thread.postNimCmd("quit")
     

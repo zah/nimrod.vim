@@ -9,7 +9,11 @@ if !executable('nim')
   echoerr "the Nim compiler must be in your system's PATH"
 endif
 
-exe 'pyfile ' . fnameescape(s:plugin_path) . '/nim_vim.py'
+if has('python3')
+    exe 'py3file ' . fnameescape(s:plugin_path) . '/nim_vim.py'
+else
+    exe 'pyfile ' . fnameescape(s:plugin_path) . '/nim_vim.py'
+endif
 
 fun! nim#init()
   let cmd = printf("nim --dump.format:json --verbosity:0 dump %s", s:CurrentNimFile())
