@@ -5,7 +5,7 @@ if !exists("g:nim_caas_enabled")
   let g:nim_caas_enabled = 0
 endif
 
-if !executable('nim')
+if !executable('nimrod') && !executable('nim')
   echoerr "the Nim compiler must be in your system's PATH"
 endif
 
