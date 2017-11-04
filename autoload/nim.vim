@@ -197,7 +197,9 @@ fun! GotoDefinition_nim_ready(def_output)
   let defBits = split(rawDef, '\t')
   let file = defBits[4]
   let line = defBits[5]
+  let column = defBits[6]
   exe printf("e +%d %s", line, file)
+  call cursor(line, column + 1)
   return 1
 endf
 
