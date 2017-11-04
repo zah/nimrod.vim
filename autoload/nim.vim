@@ -20,7 +20,7 @@ fun! nim#init()
   let raw_dumpdata = system(cmd)
   if !v:shell_error && expand("%:e") == "nim"
     let dumpdata = eval(substitute(raw_dumpdata, "\n", "", "g"))
-    
+
     let b:nim_project_root = dumpdata['project_path']
     let b:nim_defined_symbols = dumpdata['defined_symbols']
     let b:nim_caas_enabled = g:nim_caas_enabled || index(dumpdata['defined_symbols'], 'forcecaas') != -1
@@ -67,7 +67,7 @@ command! NimRestartService
 fun! s:CurrentNimFile()
   let save_cur = getpos('.')
   call cursor(0, 0, 0)
-  
+
   let PATTERN = "\\v^\\#\\s*included from \\zs.*\\ze"
   let l = search(PATTERN, "n")
 
@@ -103,26 +103,32 @@ let g:nim_symbol_types = {
   \ }
 
 fun! NimExec(op)
+
+  " This is the "projectfile.nim that nimsuggest wants.  It defaults to
+  " the file we're operating on and only set to a real project file if the
+  " appropriate globabl configuration is set.
+  let project_file = s:CurrentNimFile()
+  if exists("g:nim_project_file")
+    project_file = g:nim_project_file
+  endif
+
   let isDirty = getbufvar(bufnr('%'), "&modified")
   if isDirty
     let tmp = tempname() . bufname("%") . "_dirty.nim"
     silent! exe ":w " . tmp
-
-    let cmd = printf("idetools %s --trackDirty:\"%s,%s,%d,%d\" \"%s\"",
-      \ a:op, tmp, expand('%:p'), line('.'), col('.')-1, s:CurrentNimFile())
+    let cmd = printf("echo %s '%s;%s:%d:%d' | nimsuggest --stdin %s | tail -n 2 | head -n 1", a:op, s:CurrentNimFile(), tmp, line('.'), col('.') - 1, project_file)
   else
-    let cmd = printf("idetools %s --track:\"%s,%d,%d\" \"%s\"",
-      \ a:op, expand('%:p'), line('.'), col('.')-1, s:CurrentNimFile())
+    let cmd = printf("echo %s %s:%d:%d | nimsuggest --stdin %s | tail -n 2 | head -n 1", a:op, s:CurrentNimFile(), line('.'), col('.') - 1, project_file)
   endif
 
   if b:nim_caas_enabled
     exe printf("py nimExecCmd('%s', '%s', False)", b:nim_project_root, cmd)
     let output = l:py_res
   else
-    let output = system("nim " . cmd)
+    let output = system(cmd)
   endif
 
-  call add(g:nim_log, "nim " . cmd . "\n" . output)
+  call add(g:nim_log, cmd . "\n" . output)
   return output
 endf
 
@@ -187,13 +193,13 @@ fun! GotoDefinition_nim_ready(def_output)
     " echoerr a:def_output
     return 0
   endif
-  
+
   let rawDef = matchstr(a:def_output, 'def\t\([^\n]*\)')
   if rawDef == ""
     echo "the current cursor position does not match any definitions"
     return 0
   endif
-  
+
   let defBits = split(rawDef, '\t')
   let file = defBits[4]
   let line = defBits[5]
@@ -202,7 +208,7 @@ fun! GotoDefinition_nim_ready(def_output)
 endf
 
 fun! GotoDefinition_nim()
-  call NimExecAsync("--def", function("GotoDefinition_nim_ready"))
+  call NimExecAsync("def", function("GotoDefinition_nim_ready"))
 endf
 
 fun! FindReferences_nim()
@@ -213,7 +219,7 @@ endf
 fun! SyntaxCheckers_nim_nim_GetLocList()
   let makeprg = 'nim check --hints:off --listfullpaths ' . s:CurrentNimFile()
   let errorformat = &errorformat
-  
+
   return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
 endf
 
