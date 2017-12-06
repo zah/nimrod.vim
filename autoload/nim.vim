@@ -135,21 +135,29 @@ fun! NimComplete(findstart, base)
   if b:nim_caas_enabled == 0
     return -1
   endif
+  let curcol = col('.')
 
   if a:findstart
     if synIDattr(synIDtrans(synID(line("."),col("."),1)), "name") == 'Comment'
       return -1
     endif
-    return col('.')
+
+    let curline = getline(line('.'))
+    return curcol - match(reverse(split(curline, '\zs')), '\W') - 1
   else
     let result = []
     let sugOut = NimExec("--suggest")
+    let baselen = len(a:base)
+
     for line in split(sugOut, '\n')
       let lineData = split(line, '\t')
       if len(lineData) > 0 && lineData[0] == "sug"
-        let kind = get(g:nim_symbol_types, lineData[1], '')
-        let c = { 'word': lineData[2], 'kind': kind, 'menu': lineData[3], 'dup': 1 }
-        call add(result, c)
+        let word = lineData[2]
+        if a:base ==# word[: baselen - 1] || baselen == 0
+          let kind = get(g:nim_symbol_types, lineData[1], '')
+          let c = {'word': word, 'kind': kind, 'menu': lineData[3], 'dup': 1}
+          call add(result, c)
+        endif
       endif
     endfor
     return result
