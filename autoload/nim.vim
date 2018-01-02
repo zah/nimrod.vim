@@ -105,7 +105,7 @@ let g:nim_symbol_types = {
 fun! NimExec(op)
   let isDirty = getbufvar(bufnr('%'), "&modified")
   if isDirty
-    let tmp = tempname() . bufname("%") . "_dirty.nim"
+    let tmp = tempname() . fnamemodify(bufname('%'), ':t:r') . "_dirty.nim"
     silent! exe ":w " . tmp
 
     let cmd = printf("idetools %s --trackDirty:\"%s,%s,%d,%d\" \"%s\"",
