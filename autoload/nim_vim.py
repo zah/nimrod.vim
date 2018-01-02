@@ -1,5 +1,6 @@
 from sys import version_info
-import threading, subprocess, signal, os, platform, getpass
+from os import name
+import threading, subprocess, signal, os, platform, getpass, re, copy
 
 if version_info[0] == 3:
     import queue as Queue
@@ -20,6 +21,13 @@ class NimThread(threading.Thread):
     super(NimThread, self).__init__()
     self.tasks = Queue.Queue()
     self.responses = Queue.Queue()
+    if name == 'nt':
+        si = subprocess.STARTUPINFO()
+        si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        si.wShowWindow = subprocess.SW_HIDE
+    else:
+        si = None
+    cmd.append(project_path)
     self.nim = subprocess.Popen(
        cmd,
        cwd = os.path.dirname(project_path),
@@ -27,6 +35,7 @@ class NimThread(threading.Thread):
        stdout = subprocess.PIPE,
        stderr = subprocess.STDOUT,
        universal_newlines = True,
+       startupinfo = si,
        bufsize = 1)
  
   def postNimCmd(self, msg, async = True):
@@ -43,6 +52,7 @@ class NimThread(threading.Thread):
         break
 
       self.nim.stdin.write(msg + "\n")
+      self.nim.stdin.flush()
       result = ""
       
       while True:

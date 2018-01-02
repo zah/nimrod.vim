@@ -35,8 +35,8 @@ else
   let s:nim_cmd_template = 'nim %s "%s"'
   let s:nim_suggestions_option = '--suggest'
   let s:nim_definitions_option = '--def'
-  let s:nim_dirty_cmd_generator = 'printf(''idetools %s --trackDirty:"%s,%s,%d,%d"'', a:op, tmp, expand(''%:p''), ''\\'', "/", "g", line("."), col(".") - 1)'
-  let s:nim_cmd_generator = 'printf(''idetools %s --track:"%s,%d,%d"'', a:op, expand(''%:p''), ''\\'', "/", "g", line("."), col(".") - 1)'
+  let s:nim_dirty_cmd_generator = 'printf(''idetools %s --trackDirty:"%s,%s,%d,%d"'', a:op, tmp, substitute(expand(''%:p''), ''\\'', "/", "g"), line("."), col(".") - 1)'
+  let s:nim_cmd_generator = 'printf(''idetools %s --track:"%s,%d,%d"'', a:op, substitute(expand(''%:p''), ''\\'', "/", "g"), line("."), col(".") - 1)'
 endif
 
 fun! nim#init()
@@ -44,8 +44,8 @@ fun! nim#init()
   let raw_dumpdata = system(cmd)
   if !v:shell_error && expand("%:e") == "nim"
     let dumpdata = eval(substitute(raw_dumpdata, "\n", "", "g"))
-    
-    let b:nim_project_root = dumpdata['project_path']
+
+    let b:nim_project_root = substitute(dumpdata['project_path'], '\\', '/', 'g')
     let b:nim_defined_symbols = dumpdata['defined_symbols']
     let b:nim_caas_enabled = g:nim_caas_enabled || index(dumpdata['defined_symbols'], 'forcecaas') != -1
 
@@ -103,7 +103,7 @@ fun! s:CurrentNimFile()
   endif
 
   call setpos('.', save_cur)
-  return l:to_check
+  return substitute(fnamemodify(l:to_check, ':p'), '\\', '/', 'g')
 endf
 
 let g:nim_symbol_types = {
@@ -140,6 +140,7 @@ fun! NimExec(op)
   if isDirty
     let tmp = tempname() . bufname("%") . "_dirty.nim"
     silent! exe ":w " . tmp
+    let tmp = substitute(tmp, '\\', '/', 'g')
 
     let cmd = eval(s:nim_dirty_cmd_generator)
   else
