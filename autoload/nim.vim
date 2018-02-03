@@ -234,12 +234,3 @@ if exists("g:SyntasticRegistry")
       \ 'filetype': 'nim',
       \ 'name': 'nim'})
 endif
-
-if !exists("g:quickrun_config")
-  let g:quickrun_config = {}
-endif
-
-if !exists("g:quickrun_config.nim")
-  let g:quickrun_config.nim = { "exec": "nim c --run --verbosity:0 %S" }
-endif
-
