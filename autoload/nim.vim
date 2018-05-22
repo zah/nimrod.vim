@@ -15,13 +15,37 @@ elseif has("python")
   exe 'pyfile ' . fnameescape(s:plugin_path) . '/nim_vim.py'
 endif
 
+if !exists('g:nim_use_nimsuggest')
+  if executable('nimsuggest')
+    let g:nim_use_nimsuggest = 1
+  else
+    let g:nim_use_nimsuggest = 0
+  endif
+endif
+
+if g:nim_use_nimsuggest
+  let g:nim_server_cmd = ['nimsuggest', '--stdin', '--v2']
+  let s:nim_cmd_template = 'echo %s | nimsuggest --stdin --v2 %s'
+  let s:nim_suggestions_option = 'sug'
+  let s:nim_definitions_option = 'def'
+  let s:nim_dirty_cmd_generator = 'printf(''%s "%s";"%s":%d:%d'', a:op, s:CurrentNimFile(), tmp, line("."), col(".")-1)'
+  let s:nim_cmd_generator = 'printf(''%s "%s":%d:%d'', a:op, s:CurrentNimFile(), line("."), col(".")-1)'
+else
+  let g:nim_server_cmd = ['nim', 'serve', '--server.type:stdin']
+  let s:nim_cmd_template = 'nim %s "%s"'
+  let s:nim_suggestions_option = '--suggest'
+  let s:nim_definitions_option = '--def'
+  let s:nim_dirty_cmd_generator = 'printf(''idetools %s --trackDirty:"%s,%s,%d,%d"'', a:op, tmp, substitute(expand(''%:p''), ''\\'', "/", "g"), line("."), col(".") - 1)'
+  let s:nim_cmd_generator = 'printf(''idetools %s --track:"%s,%d,%d"'', a:op, substitute(expand(''%:p''), ''\\'', "/", "g"), line("."), col(".") - 1)'
+endif
+
 fun! nim#init()
   let cmd = printf("nim --dump.format:json --verbosity:0 dump %s", s:CurrentNimFile())
   let raw_dumpdata = system(cmd)
   if !v:shell_error && expand("%:e") == "nim"
     let dumpdata = eval(substitute(raw_dumpdata, "\n", "", "g"))
-    
-    let b:nim_project_root = dumpdata['project_path']
+
+    let b:nim_project_root = substitute(dumpdata['project_path'], '\\', '/', 'g')
     let b:nim_defined_symbols = dumpdata['defined_symbols']
     let b:nim_caas_enabled = g:nim_caas_enabled || index(dumpdata['defined_symbols'], 'forcecaas') != -1
 
@@ -79,7 +103,7 @@ fun! s:CurrentNimFile()
   endif
 
   call setpos('.', save_cur)
-  return l:to_check
+  return substitute(fnamemodify(l:to_check, ':p'), '\\', '/', 'g')
 endf
 
 let g:nim_symbol_types = {
@@ -103,26 +127,35 @@ let g:nim_symbol_types = {
   \ }
 
 fun! NimExec(op)
+
+  " This is the "projectfile.nim that nimsuggest wants. It defaluts to
+  " the file we're operating on and only set to a real project file if the
+  " appropriate  global configuration is set.
+  let project_file = s:CurrentNimFile()
+  if g:nim_use_nimsuggest && exists("g:nim_project_file")
+    let project_file = g:nim_project_file
+  endif
+
   let isDirty = getbufvar(bufnr('%'), "&modified")
   if isDirty
     let tmp = tempname() . bufname("%") . "_dirty.nim"
     silent! exe ":w " . tmp
+    let tmp = substitute(tmp, '\\', '/', 'g')
 
-    let cmd = printf("idetools %s --trackDirty:\"%s,%s,%d,%d\" \"%s\"",
-      \ a:op, tmp, expand('%:p'), line('.'), col('.')-1, s:CurrentNimFile())
+    let cmd = eval(s:nim_dirty_cmd_generator)
   else
-    let cmd = printf("idetools %s --track:\"%s,%d,%d\" \"%s\"",
-      \ a:op, expand('%:p'), line('.'), col('.')-1, s:CurrentNimFile())
+    let cmd = eval(s:nim_cmd_generator)
   endif
 
   if b:nim_caas_enabled
     exe printf("py nimExecCmd('%s', '%s', False)", b:nim_project_root, cmd)
     let output = l:py_res
   else
-    let output = system("nim " . cmd)
+    let output = system(printf(s:nim_cmd_template, cmd, project_file))
   endif
+  let output = substitute(output, '.\{-}>\s\+', '', '')
 
-  call add(g:nim_log, "nim " . cmd . "\n" . output)
+  call add(g:nim_log, cmd . "\n" . output)
   return output
 endf
 
@@ -148,7 +181,7 @@ fun! NimComplete(findstart, base)
     return start
   else
     let result = []
-    let sugOut = NimExec("--suggest")
+    let sugOut = NimExec(s:nim_suggestions_option)
     for line in split(sugOut, '\n')
       let lineData = split(line, '\t')
       if len(lineData) > 0 && lineData[0] == "sug"
@@ -210,7 +243,7 @@ fun! GotoDefinition_nim_ready(def_output)
 endf
 
 fun! GotoDefinition_nim()
-  call NimExecAsync("--def", function("GotoDefinition_nim_ready"))
+  call NimExecAsync(s:nim_definitions_option, function("GotoDefinition_nim_ready"))
 endf
 
 fun! FindReferences_nim()

@@ -1,5 +1,6 @@
 from sys import version_info
-import threading, subprocess, signal, os, platform, getpass
+from os import name
+import threading, subprocess, signal, os, platform, getpass, re, copy
 
 if version_info[0] == 3:
     import queue as Queue
@@ -16,17 +17,25 @@ except ImportError:
   vim = Vim()
 
 class NimThread(threading.Thread):
-  def __init__(self, project_path):
+  def __init__(self, cmd, project_path):
     super(NimThread, self).__init__()
     self.tasks = Queue.Queue()
     self.responses = Queue.Queue()
+    if name == 'nt':
+        si = subprocess.STARTUPINFO()
+        si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        si.wShowWindow = subprocess.SW_HIDE
+    else:
+        si = None
+    cmd.append(project_path)
     self.nim = subprocess.Popen(
-       ["nim", "serve", "--server.type:stdin", project_path],
+       cmd,
        cwd = os.path.dirname(project_path),
        stdin = subprocess.PIPE,
        stdout = subprocess.PIPE,
        stderr = subprocess.STDOUT,
        universal_newlines = True,
+       startupinfo = si,
        bufsize = 1)
  
   def postNimCmd(self, msg, async = True):
@@ -43,12 +52,13 @@ class NimThread(threading.Thread):
         break
 
       self.nim.stdin.write(msg + "\n")
+      self.nim.stdin.flush()
       result = ""
       
       while True:
         line = self.nim.stdout.readline()
         result += line
-        if line == "\n":
+        if re.match('^(?:\n|>\s*)$', line) is not None:
           if not async:
             self.responses.put(result)
           else:
@@ -66,8 +76,8 @@ class NimVimThread(NimThread):
 
 NimProjects = {}
 
-def nimStartService(project):
-  target = NimVimThread(project)
+def nimStartService(cmd, project):
+  target = NimVimThread(cmd, project)
   NimProjects[project] = target
   target.start()
   return target
@@ -79,14 +89,22 @@ def nimTerminateService(project):
 
 def nimRestartService(project):
   nimTerminateService(project)
-  nimStartService(project)
+  server = copy.copy(vim.vars['nim_server_cmd'][0:])
+  if version_info[0] == 3:
+    for i in range(len(server)):
+        server[i] = server[i].decode()
+  nimStartService(server, project)
 
 def nimExecCmd(project, cmd, async = True):
   target = None
   if NimProjects.has_key(project):
     target = NimProjects[project]
   else:
-    target = nimStartService(project)
+    server = copy.copy(vim.vars['nim_server_cmd'][0:])
+    if version_info[0] == 3:
+      for i in range(len(server)):
+          server[i] = server[i].decode()
+    target = nimStartService(server, project)
   
   result = target.postNimCmd(cmd, async)
   
