@@ -11,8 +11,10 @@ endif
 
 if has("python3")
   exe 'py3file ' . fnameescape(s:plugin_path) . '/nim_vim.py'
+  let s:py_cmd = 'py3 '
 elseif has("python")
   exe 'pyfile ' . fnameescape(s:plugin_path) . '/nim_vim.py'
+  let s:py_cmd = 'py '
 endif
 
 fun! nim#init()
@@ -53,16 +55,16 @@ augroup NimVim
   au!
   au BufEnter log://nim call s:UpdateNimLog()
   " au QuitPre * :py nimTerminateAll()
-  au VimLeavePre * :py nimTerminateAll()
+  exe printf("au VimLeavePre * :%s nimTerminateAll()", s:py_cmd)
 augroup END
 
 command! NimLog :e log://nim
 
 command! NimTerminateService
-  \ :exe printf("py nimTerminateService('%s')", b:nim_project_root)
+  \ :exe printf("%s nimTerminateService('%s')", s:py_cmd, b:nim_project_root)
 
 command! NimRestartService
-  \ :exe printf("py nimRestartService('%s')", b:nim_project_root)
+  \ :exe printf("%s nimRestartService('%s')", s:py_cmd, b:nim_project_root)
 
 fun! s:CurrentNimFile()
   let save_cur = getpos('.')
@@ -116,7 +118,7 @@ fun! NimExec(op)
   endif
 
   if b:nim_caas_enabled
-    exe printf("py nimExecCmd('%s', '%s', False)", b:nim_project_root, cmd)
+    exe printf("%s nimExecCmd('%s', '%s', False)", s:py_cmd, b:nim_project_root, cmd)
     let output = l:py_res
   else
     let output = system("nim " . cmd)

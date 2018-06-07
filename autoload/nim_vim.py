@@ -73,7 +73,7 @@ def nimStartService(project):
   return target
 
 def nimTerminateService(project):
-  if NimProjects.has_key(project):
+  if project in NimProjects:
     NimProjects[project].postNimCmd("quit")
     del NimProjects[project]
 
@@ -83,7 +83,7 @@ def nimRestartService(project):
 
 def nimExecCmd(project, cmd, async = True):
   target = None
-  if NimProjects.has_key(project):
+  if project in NimProjects:
     target = NimProjects[project]
   else:
     target = nimStartService(project)
