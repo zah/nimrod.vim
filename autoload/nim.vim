@@ -194,7 +194,7 @@ fun! NimAsyncCmdComplete(cmd, output)
 endf
 
 fun! GotoDefinition_nim_ready(def_output)
-  if v:shell_error
+  if !g:nim_caas_enabled && v:shell_error
     echo "nim was unable to locate the definition. exit code: " . v:shell_error
     " echoerr a:def_output
     return 0
