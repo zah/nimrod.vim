@@ -209,7 +209,13 @@ fun! GotoDefinition_nim_ready(def_output)
   let defBits = split(rawDef, '\t')
   let file = defBits[4]
   let line = defBits[5]
-  exe printf("e +%d %s", line, file)
+
+  if bufloaded(file)   " Not sure we don't want bufexists() here instead
+    exe printf("buffer +%d %s",line, file)
+  else
+    exe printf("e +%d %s", line, file)
+  endif
+
   return 1
 endf
 
