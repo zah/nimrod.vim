@@ -22,7 +22,7 @@ fun! nim#init()
     let false = 0 " Needed for eval of json
     let true = 1 " Needed for eval of json
     let dumpdata = eval(substitute(raw_dumpdata, "\n", "", "g"))
-    
+
     let b:nim_project_root = dumpdata['project_path']
     let b:nim_defined_symbols = dumpdata['defined_symbols']
     let b:nim_caas_enabled = g:nim_caas_enabled || index(dumpdata['defined_symbols'], 'forcecaas') != -1
@@ -71,7 +71,7 @@ command! NimRestartService
 fun! s:CurrentNimFile()
   let save_cur = getpos('.')
   call cursor(0, 0, 0)
-  
+
   let PATTERN = "\\v^\\#\\s*included from \\zs.*\\ze"
   let l = search(PATTERN, "n")
 
@@ -193,28 +193,42 @@ fun! NimAsyncCmdComplete(cmd, output)
   return 1
 endf
 
-fun! GotoDefinition_nim_ready(def_output)
-  if v:shell_error
-    echo "nim was unable to locate the definition. exit code: " . v:shell_error
-    " echoerr a:def_output
-    return 0
-  endif
-  
-  let rawDef = matchstr(a:def_output, 'def\t\([^\n]*\)')
-  if rawDef == ""
-    echo "the current cursor position does not match any definitions"
-    return 0
-  endif
-  
-  let defBits = split(rawDef, '\t')
-  let file = defBits[4]
-  let line = defBits[5]
-  exe printf("e +%d %s", line, file)
-  return 1
-endf
-
 fun! GotoDefinition_nim()
-  call NimExecAsync("--def", function("GotoDefinition_nim_ready"))
+python3 << EOF
+import subprocess, vim, fcntl, os
+if 'nim_proc' not in globals():
+    nim_proc = {}
+
+f = vim.current.buffer.name
+i = vim.current.buffer.number
+if i not in nim_proc:
+    print('spawning new nimsuggest process')
+    nim_proc[i] = subprocess.Popen(['nimsuggest', '--stdin', f],
+            stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT)
+    while True:
+        if b'terse' in nim_proc[i].stdout.readline():
+            break
+
+p = nim_proc[i]
+
+line, col = vim.eval('line(".")'), int(vim.eval('col(".")')) - 1
+
+command = f'def {f}:{line}:{col}\n'
+p.stdin.write(bytes(command, encoding='ascii'))
+p.stdin.flush()
+res = []
+while True:
+    o = p.stdout.readline().decode().split('\t')
+    if len(o) == 1:
+        break
+    else:
+        res = o
+if len(res) > 1:
+    def_file, def_line, def_col = res[-5], res[-4], int(res[-3])
+    vim.command(f'e {def_file}')
+    vim.eval(f'cursor({def_line}, {def_col + 1})')
+EOF
 endf
 
 fun! FindReferences_nim()
@@ -225,7 +239,7 @@ endf
 fun! SyntaxCheckers_nim_nim_GetLocList()
   let makeprg = 'nim check --hints:off --listfullpaths ' . s:CurrentNimFile()
   let errorformat = &errorformat
-  
+
   return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
 endf
 
