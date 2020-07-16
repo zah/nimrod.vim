@@ -24,7 +24,7 @@ It is also recommened that you use the [syntastic](https://github.com/scrooloose
 
 First I'll show you how to install tpope's
 [pathogen.vim](https://github.com/tpope/vim-pathogen) so that it's easy to
-install `nimrod.vim`.  Do this in your Terminal so that you get the
+install `nim.vim`.  Do this in your Terminal so that you get the
 `pathogen.vim` file and the directories it needs:
 
     mkdir -p ~/.vim/autoload ~/.vim/bundle; \
@@ -35,9 +35,9 @@ Next you *need to add this* to your `~/.vimrc`:
 
     call pathogen#infect()
 
-### Step 2: Install nimrod.vim as a pathogen bundle
+### Step 2: Install nim.vim as a pathogen bundle
 
-You now have pathogen installed and can put `nimrod.vim` into `~/.vim/bundle`
+You now have pathogen installed and can put `nim.vim` into `~/.vim/bundle`
 like this:
 
     cd ~/.vim/bundle
@@ -99,7 +99,7 @@ Next you *need to add this* to your `~/.vimrc`:
 The `JumpToDef` function hooks the `nim.vim` plugin to invoke the nim
 compiler with the appropriate idetools command. Pressing meta+g will then jump
 to the definition of the word your cursor is on. This uses the nim compiler
-instead of ctags, so it works on any nimrod file which is compilable without
+instead of ctags, so it works on any nim file which is compilable without
 requiring you to maintain a database file.
   
 # Other recomended Vim plugins
@@ -117,5 +117,5 @@ the plugin's invocations and nim's idetool answers.
 
 This can give you a hint of where the problem is and allow you to easily
 reproduce on the commandline the idetool parameters the vim plugin is
-generating so you can prepare a test case for either this plugin or the nimrod
+generating so you can prepare a test case for either this plugin or the nim
 compiler.
