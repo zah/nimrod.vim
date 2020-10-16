@@ -2,28 +2,28 @@
 " For version 6.x: Quit when a syntax file was already loaded
 if version < 600
   syntax clear
-elseif exists("b:current_syntax")
+elseif exists('b:current_syntax')
   finish
 endif
 
 " Keep user-supplied options
-if !exists("nim_highlight_numbers")
+if !exists('nim_highlight_numbers')
   let nim_highlight_numbers = 1
 endif
-if !exists("nim_highlight_builtins")
+if !exists('nim_highlight_builtins')
   let nim_highlight_builtins = 1
 endif
-if !exists("nim_highlight_exceptions")
+if !exists('nim_highlight_exceptions')
   let nim_highlight_exceptions = 1
 endif
-if !exists("nim_highlight_space_errors")
+if !exists('nim_highlight_space_errors')
   let nim_highlight_space_errors = 1
 endif
-if !exists("nim_highlight_special_vars")
+if !exists('nim_highlight_special_vars')
   let nim_highlight_special_vars = 1
 endif
 
-if exists("nim_highlight_all")
+if exists('nim_highlight_all')
   let nim_highlight_numbers      = 1
   let nim_highlight_builtins     = 1
   let nim_highlight_exceptions   = 1

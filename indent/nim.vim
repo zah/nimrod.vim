@@ -1,5 +1,5 @@
 " Only load this indent file when no other was loaded.
-if exists("b:did_indent")
+if exists('b:did_indent')
   finish
 endif
 let b:did_indent = 1
@@ -12,7 +12,7 @@ setlocal indentexpr=GetNimIndent(v:lnum)
 setlocal indentkeys=!^F,o,O,<:>,0),0],0},=elif
 
 " Only define the function once.
-if exists("*GetNimIndent")
+if exists('*GetNimIndent')
   finish
 endif
 
@@ -38,7 +38,7 @@ function! GetNimIndent(lnum)
   endif
 
   " If the start of the line is in a string don't change the indent.
-  if has('syntax_items') && synIDattr(synID(a:lnum, 1, 1), "name") =~ "String$"
+  if has('syntax_items') && synIDattr(synID(a:lnum, 1, 1), 'name') =~ 'String$'
     return -1
   endif
 
@@ -54,12 +54,12 @@ function! GetNimIndent(lnum)
     " If the last character in the line is a comment, do a binary search for
     " the start of the comment.  synID() is slow, a linear search would take
     " too long on a long line.
-    if synIDattr(synID(plnum, pline_len, 1), "name") =~ "Comment$"
+    if synIDattr(synID(plnum, pline_len, 1), 'name') =~ 'Comment$'
       let min = 1
       let max = pline_len
       while min < max
         let col = (min + max) / 2
-        if synIDattr(synID(plnum, col, 1), "name") =~ "Comment$"
+        if synIDattr(synID(plnum, col, 1), 'name') =~ 'Comment$'
           let max = col
         else
           let min = col + 1
