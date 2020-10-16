@@ -216,7 +216,7 @@ fun! GotoDefinition_nim() abort
 endf
 
 fun! FindReferences_nim() abort
-  setloclist()
+  "setloclist()
 endf
 
 " Syntastic syntax checking
