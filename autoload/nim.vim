@@ -13,7 +13,7 @@ if has('pythonx')
   exe 'pyxfile ' . fnameescape(s:plugin_path) . '/nim_vim.py'
 endif
 
-fun! nim#init()
+fun! nim#init() abort
   let cmd = printf('nim --dump.format:json --verbosity:0 dump %s', s:CurrentNimFile())
   let raw_dumpdata = system(cmd)
   if !v:shell_error && expand('%:e') == 'nim'
@@ -35,7 +35,7 @@ fun! nim#init()
   endif
 endf
 
-fun! s:UpdateNimLog()
+fun! s:UpdateNimLog() abort
   setlocal buftype=nofile
   setlocal bufhidden=hide
   setlocal noswapfile
@@ -66,7 +66,7 @@ command! NimTerminateService
 command! NimRestartService
   \ :exe printf("pyx nimRestartService('%s')", b:nim_project_root)
 
-fun! s:CurrentNimFile()
+fun! s:CurrentNimFile() abort
   let save_cur = getpos('.')
   call cursor(0, 0, 0)
   
@@ -104,7 +104,7 @@ let g:nim_symbol_types = {
   \ 'skEnumField': 'v',
   \ }
 
-fun! NimExec(op)
+fun! NimExec(op) abort
   let isDirty = getbufvar(bufnr('%'), '&modified')
   if isDirty
     let tmp = tempname() . bufname('%') . '_dirty.nim'
@@ -128,12 +128,12 @@ fun! NimExec(op)
   return output
 endf
 
-fun! NimExecAsync(op, Handler)
+fun! NimExecAsync(op, Handler) abort
   let result = NimExec(a:op)
   call a:Handler(result)
 endf
 
-fun! NimComplete(findstart, base)
+fun! NimComplete(findstart, base) abort
   if b:nim_caas_enabled == 0
     return -1
   endif
@@ -178,7 +178,7 @@ let g:neocomplete#sources#omni#input_patterns['nim'] = '[^. *\t]\.\w*'
 
 let g:nim_completion_callbacks = {}
 
-fun! NimAsyncCmdComplete(cmd, output)
+fun! NimAsyncCmdComplete(cmd, output) abort
   call add(g:nim_log, a:output)
   echom g:nim_completion_callbacks
   if has_key(g:nim_completion_callbacks, a:cmd)
@@ -191,7 +191,7 @@ fun! NimAsyncCmdComplete(cmd, output)
   return 1
 endf
 
-fun! GotoDefinition_nim_ready(def_output)
+fun! GotoDefinition_nim_ready(def_output) abort
   if v:shell_error
     echo 'nim was unable to locate the definition. exit code: ' . v:shell_error
     " echoerr a:def_output
@@ -211,23 +211,23 @@ fun! GotoDefinition_nim_ready(def_output)
   return 1
 endf
 
-fun! GotoDefinition_nim()
+fun! GotoDefinition_nim() abort
   call NimExecAsync('--def', function('GotoDefinition_nim_ready'))
 endf
 
-fun! FindReferences_nim()
+fun! FindReferences_nim() abort
   setloclist()
 endf
 
 " Syntastic syntax checking
-fun! SyntaxCheckers_nim_nim_GetLocList()
+fun! SyntaxCheckers_nim_nim_GetLocList() abort
   let makeprg = 'nim check --hints:off --listfullpaths ' . s:CurrentNimFile()
   let errorformat = &errorformat
   
   return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
 endf
 
-function! SyntaxCheckers_nim_nim_IsAvailable()
+function! SyntaxCheckers_nim_nim_IsAvailable() abort
   return executable('nim')
 endfunction
 
