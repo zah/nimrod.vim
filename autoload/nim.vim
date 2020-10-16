@@ -119,7 +119,7 @@ fun! NimExec(op) abort
 
   if b:nim_caas_enabled
     exe printf("pyx nimExecCmd('%s', '%s', False)", b:nim_project_root, cmd)
-    let output = l:py_res
+    let output = get(l:, 'py_res', '')
   else
     let output = system('nim ' . cmd)
   endif
