@@ -9,10 +9,8 @@ if !executable('nim')
   echoerr "the Nim compiler must be in your system's PATH"
 endif
 
-if has("python3")
-  exe 'py3file ' . fnameescape(s:plugin_path) . '/nim_vim.py'
-elseif has("python")
-  exe 'pyfile ' . fnameescape(s:plugin_path) . '/nim_vim.py'
+if has('pythonx')
+  exe 'pyxfile ' . fnameescape(s:plugin_path) . '/nim_vim.py'
 endif
 
 fun! nim#init()
@@ -54,19 +52,19 @@ endf
 augroup NimVim
   au!
   au BufEnter log://nim call s:UpdateNimLog()
-  if has("python3") || has("python")
-    " au QuitPre * :py nimTerminateAll()
-    au VimLeavePre * :py nimTerminateAll()
+  if has("pythonx")
+    " au QuitPre * :pyx nimTerminateAll()
+    au VimLeavePre * :pyx nimTerminateAll()
   endif
 augroup END
 
 command! NimLog :e log://nim
 
 command! NimTerminateService
-  \ :exe printf("py nimTerminateService('%s')", b:nim_project_root)
+  \ :exe printf("pyx nimTerminateService('%s')", b:nim_project_root)
 
 command! NimRestartService
-  \ :exe printf("py nimRestartService('%s')", b:nim_project_root)
+  \ :exe printf("pyx nimRestartService('%s')", b:nim_project_root)
 
 fun! s:CurrentNimFile()
   let save_cur = getpos('.')
@@ -120,7 +118,7 @@ fun! NimExec(op)
   endif
 
   if b:nim_caas_enabled
-    exe printf("py nimExecCmd('%s', '%s', False)", b:nim_project_root, cmd)
+    exe printf("pyx nimExecCmd('%s', '%s', False)", b:nim_project_root, cmd)
     let output = l:py_res
   else
     let output = system("nim " . cmd)
