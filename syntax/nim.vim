@@ -1,6 +1,6 @@
 " For version 5.x: Clear all syntax items
 " For version 6.x: Quit when a syntax file was already loaded
-if version < 600
+if v:version < 600
   syntax clear
 elseif exists('b:current_syntax')
   finish
