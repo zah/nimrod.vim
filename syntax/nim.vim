@@ -156,8 +156,8 @@ syn sync match nimSync grouphere NONE "):$"
 syn sync maxlines=200
 syn sync minlines=2000
 
-if version >= 508 || !exists("did_nim_syn_inits")
-  if version <= 508
+if v:version >= 508 || !exists("did_nim_syn_inits")
+  if v:version <= 508
     let did_nim_syn_inits = 1
     command -nargs=+ HiLink hi link <args>
   else
