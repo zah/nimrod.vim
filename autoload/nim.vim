@@ -16,7 +16,7 @@ endif
 fun! nim#init() abort
   let cmd = printf('nim --dump.format:json --verbosity:0 dump %s', s:CurrentNimFile())
   let raw_dumpdata = system(cmd)
-  if !v:shell_error && expand('%:e') == 'nim'
+  if !v:shell_error && expand('%:e') ==# 'nim'
     let false = 0 " Needed for eval of json
     let true = 1 " Needed for eval of json
     let dumpdata = eval(substitute(raw_dumpdata, "\n", '', 'g'))
@@ -26,7 +26,7 @@ fun! nim#init() abort
     let b:nim_caas_enabled = g:nim_caas_enabled || index(dumpdata['defined_symbols'], 'forcecaas') != -1
 
     for path in dumpdata['lib_paths']
-      if finddir(path) == path
+      if finddir(path) ==# path
         let &l:path = path . ',' . &l:path
       endif
     endfor
@@ -134,12 +134,12 @@ fun! NimExecAsync(op, Handler) abort
 endf
 
 fun! NimComplete(findstart, base) abort
-  if b:nim_caas_enabled == 0
+  if b:nim_caas_enabled ==# 0
     return -1
   endif
 
   if a:findstart
-    if synIDattr(synIDtrans(synID(line('.'),col('.'),1)), 'name') == 'Comment'
+    if synIDattr(synIDtrans(synID(line('.'),col('.'),1)), 'name') ==# 'Comment'
       return -1
     endif
     let line = getline('.')
@@ -153,7 +153,7 @@ fun! NimComplete(findstart, base) abort
     let sugOut = NimExec('--suggest')
     for line in split(sugOut, '\n')
       let lineData = split(line, '\t')
-      if len(lineData) > 0 && lineData[0] == 'sug'
+      if len(lineData) > 0 && lineData[0] ==# 'sug'
         let word = split(lineData[2], '\.')[-1]
         if a:base ==? '' || word =~# '^' . a:base
           let kind = get(g:nim_symbol_types, lineData[1], '')
