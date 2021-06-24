@@ -14,9 +14,10 @@ modified python.vim (http://www.vim.org/scripts/script.php?script_id=790).
 
 # Installation
 
-Installing `nim.vim` is easy but first you need to have either pathogen plugin or vundle
-installed.  If you already have one working then skip to the [final step](README.markdown#final-step).
-It is also recommened that you use the [syntastic](https://github.com/scrooloose/syntastic) plugin for best results.
+Installing `nim.vim` is easy but first you need to have a plugin manager such
+as pathogen, vundle or vim-plug installed.
+If you already have one working then skip to the [final step](README.markdown#final-step).
+It is also recommended that you use the [syntastic](https://github.com/scrooloose/syntastic) plugin for best results.
 
 ## Pathogen
 
@@ -80,6 +81,29 @@ Modify your ~/.vimrc to get vundle running, lightly adapted from [Vundle's readm
 On the line after `Bundle 'gmarik/vundle'`, add `Bundle 'zah/nim.vim'`. You may also want
 to add `Bundle 'scrooloose/syntastic'`. Save `~/.vimrc` and restart vim. Execute `:BundleInstall`
 and wait for nim.vim to be installed.
+
+## vim-plug
+
+[vim-plug](https://github.com/junegunn/vim-plug) is a minimalist Vim plugin manager.
+
+### Step 1: Install vim-plug
+
+Install vim-plug so that it loads automatically at launch:
+
+    $ curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+          https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+### Step 2: Add `nim.vim` to your list of plugins
+
+Modify your `~/.vimrc` to add the `nim.vim` plugin to the list of plugins:
+
+    " ...
+    call plug#begin('~/.vim/plugged')
+     " ...
+     Plug 'zah/nim.vim'
+    call plug#end()
+
+Execute `:PlugInstall` and wait for `nim.vim` to be installed.
 
 ## Final Step
 Next you *need to add this* to your `~/.vimrc`:
