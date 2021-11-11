@@ -14,9 +14,10 @@ modified python.vim (http://www.vim.org/scripts/script.php?script_id=790).
 
 # Installation
 
-Installing `nim.vim` is easy but first you need to have either pathogen plugin or vundle
-installed.  If you already have one working then skip to the [final step](README.markdown#final-step).
-It is also recommened that you use the [syntastic](https://github.com/scrooloose/syntastic) plugin for best results.
+Installing `nim.vim` is easy but first you need to have a plugin manager such
+as pathogen, vundle or vim-plug installed.
+If you already have one working then skip to the [final step](README.markdown#final-step).
+It is also recommended that you use the [syntastic](https://github.com/scrooloose/syntastic) plugin for best results.
 
 ## Pathogen
 
@@ -24,24 +25,23 @@ It is also recommened that you use the [syntastic](https://github.com/scrooloose
 
 First I'll show you how to install tpope's
 [pathogen.vim](https://github.com/tpope/vim-pathogen) so that it's easy to
-install `nimrod.vim`.  Do this in your Terminal so that you get the
+install `nim.vim`.  Do this in your Terminal so that you get the
 `pathogen.vim` file and the directories it needs:
 
-    mkdir -p ~/.vim/autoload ~/.vim/bundle; \
-    curl -so ~/.vim/autoload/pathogen.vim \
-        https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
+    mkdir -p ~/.vim/autoload ~/.vim/bundle && \
+    curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 
 Next you *need to add this* to your `~/.vimrc`:
 
     call pathogen#infect()
 
-### Step 2: Install nimrod.vim as a pathogen bundle
+### Step 2: Install nim.vim as a pathogen bundle
 
-You now have pathogen installed and can put `nimrod.vim` into `~/.vim/bundle`
+You now have pathogen installed and can put `nim.vim` into `~/.vim/bundle`
 like this:
 
     cd ~/.vim/bundle
-    git clone git://github.com/zah/nim.vim.git
+    git clone https://github.com/zah/nim.vim.git
     
 You may also want to install synastic by calling 
 
@@ -81,6 +81,29 @@ On the line after `Bundle 'gmarik/vundle'`, add `Bundle 'zah/nim.vim'`. You may 
 to add `Bundle 'scrooloose/syntastic'`. Save `~/.vimrc` and restart vim. Execute `:BundleInstall`
 and wait for nim.vim to be installed.
 
+## vim-plug
+
+[vim-plug](https://github.com/junegunn/vim-plug) is a minimalist Vim plugin manager.
+
+### Step 1: Install vim-plug
+
+Install vim-plug so that it loads automatically at launch:
+
+    $ curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+          https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+### Step 2: Add `nim.vim` to your list of plugins
+
+Modify your `~/.vimrc` to add the `nim.vim` plugin to the list of plugins:
+
+    " ...
+    call plug#begin('~/.vim/plugged')
+     " ...
+     Plug 'zah/nim.vim'
+    call plug#end()
+
+Execute `:PlugInstall` and wait for `nim.vim` to be installed.
+
 ## Final Step
 Next you *need to add this* to your `~/.vimrc`:
 
@@ -99,7 +122,7 @@ Next you *need to add this* to your `~/.vimrc`:
 The `JumpToDef` function hooks the `nim.vim` plugin to invoke the nim
 compiler with the appropriate idetools command. Pressing meta+g will then jump
 to the definition of the word your cursor is on. This uses the nim compiler
-instead of ctags, so it works on any nimrod file which is compilable without
+instead of ctags, so it works on any nim file which is compilable without
 requiring you to maintain a database file.
   
 # Other recomended Vim plugins
@@ -117,5 +140,5 @@ the plugin's invocations and nim's idetool answers.
 
 This can give you a hint of where the problem is and allow you to easily
 reproduce on the commandline the idetool parameters the vim plugin is
-generating so you can prepare a test case for either this plugin or the nimrod
+generating so you can prepare a test case for either this plugin or the nim
 compiler.
