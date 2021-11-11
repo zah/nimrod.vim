@@ -27,9 +27,8 @@ First I'll show you how to install tpope's
 install `nimrod.vim`.  Do this in your Terminal so that you get the
 `pathogen.vim` file and the directories it needs:
 
-    mkdir -p ~/.vim/autoload ~/.vim/bundle; \
-    curl -so ~/.vim/autoload/pathogen.vim \
-        https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
+    mkdir -p ~/.vim/autoload ~/.vim/bundle && \
+    curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 
 Next you *need to add this* to your `~/.vimrc`:
 
@@ -41,7 +40,7 @@ You now have pathogen installed and can put `nimrod.vim` into `~/.vim/bundle`
 like this:
 
     cd ~/.vim/bundle
-    git clone git://github.com/zah/nim.vim.git
+    git clone https://github.com/zah/nim.vim.git
     
 You may also want to install synastic by calling 
 
