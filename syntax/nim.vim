@@ -60,8 +60,11 @@ syn match   nimClass         "[a-zA-Z_][a-zA-Z0-9_]*" contained
 syn keyword nimRepeat        for while
 syn keyword nimConditional   if elif else case of
 syn keyword nimOperator      and in is not or xor shl shr div
+
 syn match   nimComment       "#.*$" contains=nimTodo,@Spell
 syn region  nimComment       start="#\[" end="\]#" contains=nimTodo,@Spell
+syn region  nimComment       start="##\[" end="\]##" contains=nimTodo,@Spell
+
 syn keyword nimTodo          TODO FIXME XXX contained
 syn keyword nimBoolean       true false
 
