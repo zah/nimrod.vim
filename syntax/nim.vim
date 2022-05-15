@@ -60,8 +60,11 @@ syn match   nimClass         "[a-zA-Z_][a-zA-Z0-9_]*" contained
 syn keyword nimRepeat        for while
 syn keyword nimConditional   if elif else case of
 syn keyword nimOperator      and in is not or xor shl shr div
+
 syn match   nimComment       "#.*$" contains=nimTodo,@Spell
 syn region  nimComment       start="#\[" end="\]#" contains=nimTodo,@Spell
+syn region  nimComment       start="##\[" end="\]##" contains=nimTodo,@Spell
+
 syn keyword nimTodo          TODO FIXME XXX contained
 syn keyword nimBoolean       true false
 
@@ -72,13 +75,15 @@ syn region nimString start=+"+ skip=+\\\\\|\\"\|\\$+ excludenl end=+"+ end=+$+ k
 syn region nimString start=+"""+ end=+"""+ keepend contains=nimEscape,nimEscapeError,@Spell
 syn region nimRawString matchgroup=Normal start=+[rR]"+ end=+"+ skip=+\\\\\|\\"+ contains=@Spell
 
-syn match  nimEscape		+\\[abfnrtv'"\\]+ contained
-syn match  nimEscape		"\\\o\{1,3}" contained
-syn match  nimEscape		"\\x\x\{2}" contained
-syn match  nimEscape		"\(\\u\x\{4}\|\\U\x\{8}\)" contained
-syn match  nimEscape		"\\$"
+syn match  nimEscape        +\\[abfnrtv'"\\]+ contained
+syn match  nimEscape        "\\\o\{1,3}" contained
+syn match  nimEscape        "\\x\x\{2}" contained
+syn match  nimEscape        "\(\\u\x\{4}\|\\U\x\{8}\)" contained
+syn match  nimEscape        "\\$"
 
-syn match nimEscapeError "\\x\x\=\X" display contained
+syn match  nimDelimiter     "[\[\]\(\)\{\},]"
+
+syn match  nimEscapeError    "\\x\x\=\X" display contained
 
 if nim_highlight_numbers == 1
   " numbers (including longs and complex)
@@ -96,10 +101,10 @@ endif
 
 if nim_highlight_builtins == 1
   " builtin functions, types and objects, not really part of the syntax
-  syn keyword nimBuiltin int int8 int16 int32 int64 uint uint8 uint16 uint32 uint64 float float32 float64
-  syn keyword nimBuiltin bool void chr char string cstring pointer range array openarray openArray seq varargs varArgs
+  syn keyword nimBuiltin byte int int8 int16 int32 int64 uint uint8 uint16 uint32 uint64 float float32 float64
+  syn keyword nimBuiltin bool void chr char string cstring cstringArray pointer range array openarray openArray seq varargs varArgs
   syn keyword nimBuiltin set Byte Natural Positive Conversion
-  syn keyword nimBuiltin BiggestInt BiggestFloat cchar cschar cshort cint csize cuchar cushort
+  syn keyword nimBuiltin BiggestInt BiggestFloat BiggestUInt cchar cschar cshort cint csize csize_t cuchar cushort
   syn keyword nimBuiltin clong clonglong cfloat cdouble clongdouble cuint culong culonglong cchar
   syn keyword nimBuiltin CompileDate CompileTime nimversion nimVersion nimmajor nimMajor
   syn keyword nimBuiltin nimminor nimMinor nimpatch nimPatch cpuendian cpuEndian hostos hostOS hostcpu hostCPU inf
@@ -201,5 +206,6 @@ if v:version >= 508 || !exists('did_nim_syn_inits')
   delcommand HiLink
 endif
 
+hi link nimDelimiter Delimiter
 let b:current_syntax = 'nim'
 
