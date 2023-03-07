@@ -119,7 +119,7 @@ function! GetNimIndent(lnum)
   endif
 
   if pline =~# '\(type\|import\|const\|var\|let\)\s*$'
-    \ || pline =~# '=\s*\(object\|enum\|tuple\|concept\)'
+    \ || pline =~# '=\s*\(ref\|of\)*\s*\(|RootObj\|object\|enum\|tuple\|concept\)'
     return plindent + &sw
   endif
 
