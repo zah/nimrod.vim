@@ -97,7 +97,7 @@ endif
 if nim_highlight_builtins == 1
   " builtin functions, types and objects, not really part of the syntax
   syn keyword nimBuiltin int int8 int16 int32 int64 uint uint8 byte uint16 uint32 uint64 float float32 float64
-  syn keyword nimBuiltin bool void chr char string cstring pointer range array openarray openArray seq varargs varArgs any auto
+  syn keyword nimBuiltin bool void chr char Rune string cstring pointer range array openarray openArray seq varargs varArgs any auto
   syn keyword nimBuiltin set Byte Natural Positive Conversion
   syn keyword nimBuiltin BiggestInt BiggestFloat cchar cschar cshort cint csize cuchar cushort
   syn keyword nimBuiltin clong clonglong cfloat cdouble clongdouble cuint culong culonglong cchar
@@ -115,7 +115,7 @@ if nim_highlight_builtins == 1
   syn keyword nimBuiltin typedesc typed untyped stmt expr
   syn keyword nimBuiltin echo swap getrefcount getRefcount getcurrentexception getCurrentException Msg
   syn keyword nimBuiltin getoccupiedmem getOccupiedMem getfreemem getFreeMem gettotalmem getTotalMem isnil isNil seqtoptr seqToPtr
-  syn keyword nimBuiltin find pop GC_disable GC_enable GC_fullCollect
+  syn keyword nimBuiltin find push pop GC_disable GC_enable GC_fullCollect
   syn keyword nimBuiltin GC_setStrategy GC_enableMarkAndSweep GC_Strategy
   syn keyword nimBuiltin GC_disableMarkAnd Sweep GC_getStatistics GC_ref
   syn keyword nimBuiltin GC_ref GC_ref GC_unref GC_unref GC_unref quit
