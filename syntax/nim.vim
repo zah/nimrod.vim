@@ -100,7 +100,7 @@ if nim_highlight_builtins == 1
   syn keyword nimBuiltin bool void chr char Rune string cstring pointer range array openarray openArray seq varargs varArgs any auto
   syn keyword nimBuiltin set Byte Natural Positive Conversion
   syn keyword nimBuiltin BiggestInt BiggestFloat cchar cschar cshort cint csize cuchar cushort
-  syn keyword nimBuiltin clong clonglong cfloat cdouble clongdouble cuint culong culonglong cchar
+  syn keyword nimBuiltin clong clonglong cfloat cdouble clongdouble cuint culong culonglong cchar csize_t cstringArray
   syn keyword nimBuiltin CompileDate CompileTime nimversion nimVersion nimmajor nimMajor
   syn keyword nimBuiltin nimminor nimMinor nimpatch nimPatch cpuendian cpuEndian hostos hostOS hostcpu hostCPU inf
   syn keyword nimBuiltin neginf nan QuitSuccess QuitFailure dbglinehook dbgLineHook stdin
