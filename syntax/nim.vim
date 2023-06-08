@@ -35,21 +35,21 @@ syn region nimBrackets       contained extend keepend matchgroup=Bold start=+\(\
 
 syn keyword nimKeyword       addr and as asm atomic
 syn keyword nimKeyword       bind block break
-syn keyword nimKeyword       case cast concept const continue converter
+syn keyword nimKeyword       case cast concept const continue converter class
 syn keyword nimKeyword       defer discard distinct div do
-syn keyword nimKeyword       elif else end enum except export
-syn keyword nimKeyword       finally for from
+syn keyword nimKeyword       elif else end enum export
+syn keyword nimKeyword       for
 syn keyword nimKeyword       generic
-syn keyword nimKeyword       if import in include interface is isnot iterator
+syn keyword nimKeyword       in interface is isnot
 syn keyword nimKeyword       let
 syn keyword nimKeyword       mixin using mod
 syn keyword nimKeyword       nil not notin
 syn keyword nimKeyword       object of or out
-syn keyword nimKeyword       proc func method macro template nextgroup=nimFunction skipwhite
+syn keyword nimKeyword       proc func method macro template iterator nextgroup=nimFunction skipwhite
 syn keyword nimKeyword       ptr
-syn keyword nimKeyword       raise ref return
+syn keyword nimKeyword       ref return
 syn keyword nimKeyword       shared shl shr static
-syn keyword nimKeyword       try tuple type
+syn keyword nimKeyword       tuple type typeof
 syn keyword nimKeyword       var vtref vtptr
 syn keyword nimKeyword       when while with without
 syn keyword nimKeyword       xor
@@ -64,6 +64,28 @@ syn match   nimComment       "#.*$" contains=nimTodo,@Spell
 syn region  nimComment       start="#\[" end="\]#" contains=nimTodo,@Spell
 syn keyword nimTodo          TODO FIXME XXX contained
 syn keyword nimBoolean       true false
+
+syn keyword nimException       except finally raise try
+syn keyword nimConstant        nil
+syn keyword nimOperator        addr and as distinct div do in is isnot mod
+syn keyword nimOperator        not notin of or ptr ref shl shr xor
+syn keyword nimStatement       asm bind break cast concept const
+syn keyword nimStatement       continue defer discard enum let mixin return
+syn keyword nimStatement       static type using var yield
+syn keyword nimStatement       converter func iterator macro method proc template nextgroup=nimFunction skipwhite
+syn keyword nimStatement       alignof compiles defined sizeof
+syn keyword nimConditional     case elif else if
+syn keyword nimException       except finally raise try block
+syn keyword nimRepeat          for while
+syn keyword nimPreCondit       when static
+syn keyword nimInclude         export from import include
+syn match nimConstant         '[{}\[\]()]'
+syn match SpecialComment      '[,`\:]'
+syn match nimRepeat           '[\.]\k\+'
+syn match nimPreCondit        '{\.\|\.}'
+"syn region  nimPreCondit       start='{\.' end='\.}' contains=@Spell
+"syn keyword nimStructure       enum object tuple
+
 
 
 " Strings
@@ -111,7 +133,7 @@ if nim_highlight_builtins == 1
   syn keyword nimBuiltin tofloat toFloat tobiggestfloat toBiggestFloat toint toInt tobiggestint toBiggestInt
   syn keyword nimBuiltin addquitproc addQuitProc
   syn keyword nimBuiltin copy setlen setLen newstring newString zeromem zeroMem copymem copyMem movemem moveMem
-  syn keyword nimBuiltin equalmem equalMem alloc alloc0 realloc dealloc assert
+  syn keyword nimBuiltin equalmem equalMem alloc alloc0 realloc dealloc assert reset
   syn keyword nimBuiltin typedesc typed untyped stmt expr
   syn keyword nimBuiltin echo swap getrefcount getRefcount getcurrentexception getCurrentException Msg
   syn keyword nimBuiltin getoccupiedmem getOccupiedMem getfreemem getFreeMem gettotalmem getTotalMem isnil isNil seqtoptr seqToPtr
@@ -166,21 +188,30 @@ if v:version >= 508 || !exists('did_nim_syn_inits')
   endif
 
   " The default methods for highlighting.  Can be overridden later
-  HiLink nimBrackets       Operator
+  HiLink nimBrackets      Operator
   HiLink nimKeyword	      Keyword
-  HiLink nimFunction	    	Function
+  HiLink nimFunction	    Function
   HiLink nimConditional	  Conditional
-  HiLink nimRepeat		      Repeat
-  HiLink nimString		      String
+  HiLink nimRepeat		    Repeat
+  HiLink nimString		    String
   HiLink nimRawString	    String
-  HiLink nimBoolean        Boolean
-  HiLink nimEscape		      Special
-  HiLink nimOperator		    Operator
+  HiLink nimBoolean       Boolean
+  HiLink nimEscape		    Special
+  HiLink nimOperator		  Operator
   HiLink nimPreCondit	    PreCondit
   HiLink nimComment		    Comment
-  HiLink nimTodo		        Todo
+  HiLink nimTodo		      Todo
   HiLink nimDecorator	    Define
-  HiLink nimSpecialVar	    Identifier
+  HiLink nimSpecialVar	  Identifier
+
+  HiLink nimStatement	    Statement
+  HiLink nimConstant      Constant
+  HiLink nimInclude       Include
+  HiLink nimStructure     Structure
+  HiLink nimMacro         Macro
+  HiLink nimCharacter     Character
+  HiLink nimFloat         Float
+  HiLink nimPragma        PreProc
   
   if nim_highlight_numbers == 1
     HiLink nimNumber	Number

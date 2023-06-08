@@ -11,12 +11,21 @@ endif
 let s:cpo_save = &cpo
 set cpo-=C
 
+
+"CompilerSet errorformat=
+  "\%-GHint:\ %m,
+  "\%E%f(%l\\,\ %c)\ Error:\ %m,
+  "\%W%f(%l\\,\ %c)\ Hint:\ %m
 CompilerSet makeprg=nim\ c\ --verbosity:0\ --listfullpaths\ $*\ %:p
 
 CompilerSet errorformat=
-  \%-GHint:\ %m,
-  \%E%f(%l\\,\ %c)\ Error:\ %m,
-  \%W%f(%l\\,\ %c)\ Hint:\ %m
+      \%f(%l\\,\ %c)\ %trror:\ %m,
+      \%f(%l\\,\ %c)\ %tarning:\ %m,
+      \%A%f(%l\\,\ %c)\ Hint:\ %m,
+      \%I%f(%l\\,\ %c)\ %m,
+      \%-IHint:\ %m,
+      \%-ICC:\ %m
+"CompilerSet makeprg=nim\ c\ --listFullPaths:on\ $*\ %
 
 let &cpo = s:cpo_save
 unlet s:cpo_save
