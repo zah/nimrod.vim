@@ -55,8 +55,8 @@ syn keyword nimKeyword       when while with without
 syn keyword nimKeyword       xor
 syn keyword nimKeyword       yield
 
-syn match   nimFunction      "[a-zA-Z_][a-zA-Z0-9_]*" contained
-syn match   nimClass         "[a-zA-Z_][a-zA-Z0-9_]*" contained
+syn match   nimFunction      "[a-zA-Z_][a-zA-Z0-9_]*\|`.*`" contained
+syn match   nimClass         "[a-zA-Z_][a-zA-Z0-9_]*\|`.*`" contained
 syn keyword nimRepeat        for while
 syn keyword nimConditional   if elif else case of
 syn keyword nimOperator      and in is not or xor shl shr div
@@ -80,8 +80,8 @@ syn keyword nimRepeat          for while
 syn keyword nimPreCondit       when static
 syn keyword nimInclude         export from import include
 syn match nimConstant         '[{}\[\]()]'
-syn match SpecialComment      '[,`\:]'
-syn match nimRepeat           '[\.]\k\+'
+syn match SpecialComment      '[,`\:]\|\.\{2,}<\?'
+syn match nimRepeat           '\.\k\+'
 syn match nimPreCondit        '{\.\|\.}'
 "syn region  nimPreCondit       start='{\.' end='\.}' contains=@Spell
 "syn keyword nimStructure       enum object tuple
@@ -105,8 +105,8 @@ syn match nimEscapeError "\\x\x\=\X" display contained
 if nim_highlight_numbers == 1
   " numbers (including longs and complex)
   let s:dec_num = '\d%(_?\d)*'
-  let s:int_suf = '%(''%(%(i|I|u|U)%(8|16|32|64)|u|U))'
-  let s:float_suf = '%(''%(%(f|F)%(32|64|128)?|d|D))'
+  let s:int_suf = '%(''*%(%(i|I|u|U)%(8|16|32|64)|u|U))'
+  let s:float_suf = '%(''*%(%(f|F)%(32|64|128)?|d|D))'
   let s:exp = '%([eE][+-]?'.s:dec_num.')'
   exe 'syn match nimNumber /\v<0[bB][01]%(_?[01])*%('.s:int_suf.'|'.s:float_suf.')?>/'
   exe 'syn match nimNumber /\v<0[ocC]\o%(_?\o)*%('.s:int_suf.'|'.s:float_suf.')?>/'
@@ -135,12 +135,12 @@ if nim_highlight_builtins == 1
   syn keyword nimBuiltin copy setlen setLen newstring newString zeromem zeroMem copymem copyMem movemem moveMem
   syn keyword nimBuiltin equalmem equalMem alloc alloc0 realloc dealloc assert reset
   syn keyword nimBuiltin typedesc typed untyped stmt expr
-  syn keyword nimBuiltin echo swap getrefcount getRefcount getcurrentexception getCurrentException Msg
+  syn keyword nimBuiltin echo dump swap getrefcount getRefcount getCurrentException getCurrentExceptionMsg
   syn keyword nimBuiltin getoccupiedmem getOccupiedMem getfreemem getFreeMem gettotalmem getTotalMem isnil isNil seqtoptr seqToPtr
   syn keyword nimBuiltin find push pop GC_disable GC_enable GC_fullCollect
   syn keyword nimBuiltin GC_setStrategy GC_enableMarkAndSweep GC_Strategy
-  syn keyword nimBuiltin GC_disableMarkAnd Sweep GC_getStatistics GC_ref
-  syn keyword nimBuiltin GC_ref GC_ref GC_unref GC_unref GC_unref quit
+  syn keyword nimBuiltin GC_disableMarkAnd Sweep GC_getStatistics
+  syn keyword nimBuiltin GC_ref GC_unref quit
   syn keyword nimBuiltin OpenFile OpenFile CloseFile EndOfFile readChar
   syn keyword nimBuiltin FlushFile readfile readFile readline readLine write writeln writeLn writeline writeLine
   syn keyword nimBuiltin getfilesize getFileSize ReadBytes ReadChars readbuffer readBuffer writebytes writeBytes
