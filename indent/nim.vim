@@ -15,6 +15,9 @@ setlocal indentkeys=!^F,o,O,<:>,0),0],0},=elif
 if exists('*GetNimIndent')
   finish
 endif
+let s:cpo_save = &cpo
+set cpo&vim
+
 
 function! s:FindStartLine(fromln, pattern)
   let lnum = a:fromln
@@ -142,5 +145,7 @@ function! GetNimIndent(lnum)
 
 endfunction
 
+let &cpo = s:cpo_save
+unlet s:cpo_save
 " vim:sw=2
 

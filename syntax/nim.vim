@@ -92,7 +92,8 @@ syn match nimPreCondit        '{\.\|\.}'
 syn region nimString start=+'+ skip=+\\\\\|\\'\|\\$+ excludenl end=+'+ end=+$+ keepend contains=nimEscape,nimEscapeError,@Spell
 syn region nimString start=+"+ skip=+\\\\\|\\"\|\\$+ excludenl end=+"+ end=+$+ keepend contains=nimEscape,nimEscapeError,@Spell
 syn region nimString start=+"""+ end=+"""+ keepend contains=nimEscape,nimEscapeError,@Spell
-syn region nimRawString matchgroup=Normal start=+[rR]"+ end=+"+ skip=+\\\\\|\\"+ contains=@Spell
+"syn region nimRawString matchgroup=Normal start=+[rR]"+ end=+"+ skip=+\\\\\|\\"+ contains=@Spell
+syn region nimRawString start=+[rR]"+ end=+"+ skip=+\\\\\|\\"+ contains=@Spell
 
 syn match  nimEscape		+\\[abfnrtv'"\\]+ contained
 syn match  nimEscape		"\\\o\{1,3}" contained
@@ -190,21 +191,21 @@ if v:version >= 508 || !exists('did_nim_syn_inits')
   " The default methods for highlighting.  Can be overridden later
   HiLink nimBrackets      Operator
   HiLink nimKeyword	      Keyword
-  HiLink nimFunction	    Function
+  HiLink nimFunction	  Function
   HiLink nimConditional	  Conditional
-  HiLink nimRepeat		    Repeat
-  HiLink nimString		    String
-  HiLink nimRawString	    String
+  HiLink nimRepeat		  Repeat
+  HiLink nimString		  String
+  HiLink nimRawString	  String
   HiLink nimBoolean       Boolean
-  HiLink nimEscape		    Special
-  HiLink nimOperator		  Operator
-  HiLink nimPreCondit	    PreCondit
-  HiLink nimComment		    Comment
-  HiLink nimTodo		      Todo
-  HiLink nimDecorator	    Define
+  HiLink nimEscape		  Special
+  HiLink nimOperator	  Operator
+  HiLink nimPreCondit	  PreCondit
+  HiLink nimComment		  Comment
+  HiLink nimTodo		  Todo
+  HiLink nimDecorator	  Define
   HiLink nimSpecialVar	  Identifier
 
-  HiLink nimStatement	    Statement
+  HiLink nimStatement	  Statement
   HiLink nimConstant      Constant
   HiLink nimInclude       Include
   HiLink nimStructure     Structure
@@ -222,11 +223,11 @@ if v:version >= 508 || !exists('did_nim_syn_inits')
   endif
   
   if nim_highlight_exceptions == 1
-    HiLink nimException	Exception
+    HiLink nimException Exception
   endif
   
   if nim_highlight_space_errors == 1
-    HiLink nimSpaceError	Error
+    HiLink nimSpaceError Error
   endif
 
   delcommand HiLink
