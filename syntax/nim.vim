@@ -69,7 +69,7 @@ syn keyword nimException       except finally raise try
 syn keyword nimConstant        nil
 syn keyword nimOperator        addr and as distinct div do in is isnot mod
 syn keyword nimOperator        not notin of or ptr ref shl shr xor
-syn keyword nimStatement       asm bind break cast concept const
+syn keyword nimStatement       asm bind break cast concept const re
 syn keyword nimStatement       continue defer discard enum let mixin return
 syn keyword nimStatement       static type using var yield
 syn keyword nimStatement       converter func iterator macro method proc template nextgroup=nimFunction skipwhite
@@ -79,10 +79,10 @@ syn keyword nimException       except finally raise try block
 syn keyword nimRepeat          for while
 syn keyword nimPreCondit       when static
 syn keyword nimInclude         export from import include
-syn match nimConstant         '[{}\[\]()]'
-syn match SpecialComment      '[,`\:]\|\.\{2,}<\?'
-syn match nimRepeat           '\.\k\+'
-syn match nimPreCondit        '{\.\|\.}'
+"syn match nimConstant         '[{}\[\]()]'
+"syn match SpecialComment      '[,`\:]\|\.\{2,}<\?'
+"syn match nimRepeat           '\.\k\+'
+"syn match nimPreCondit        '{\.\|\.}'
 "syn region  nimPreCondit       start='{\.' end='\.}' contains=@Spell
 "syn keyword nimStructure       enum object tuple
 
@@ -119,11 +119,11 @@ endif
 
 if nim_highlight_builtins == 1
   " builtin functions, types and objects, not really part of the syntax
-  syn keyword nimBuiltin int int8 int16 int32 int64 uint uint8 byte uint16 uint32 uint64 float float32 float64
-  syn keyword nimBuiltin bool void chr char Rune string cstring pointer range array openarray openArray seq varargs varArgs any auto
+  syn keyword nimType int int8 int16 int32 int64 uint uint8 byte uint16 uint32 uint64 float float32 float64
+  syn keyword nimType bool void chr char Rune string cstring pointer range array openarray openArray seq varargs varArgs any auto
   syn keyword nimBuiltin set Byte Natural Positive Conversion
-  syn keyword nimBuiltin BiggestInt BiggestFloat cchar cschar cshort cint csize cuchar cushort
-  syn keyword nimBuiltin clong clonglong cfloat cdouble clongdouble cuint culong culonglong cchar csize_t cstringArray
+  syn keyword nimType BiggestInt BiggestFloat cchar cschar cshort cint csize cuchar cushort
+  syn keyword nimType clong clonglong cfloat cdouble clongdouble cuint culong culonglong cchar csize_t cstringArray
   syn keyword nimBuiltin CompileDate CompileTime nimversion nimVersion nimmajor nimMajor
   syn keyword nimBuiltin nimminor nimMinor nimpatch nimPatch cpuendian cpuEndian hostos hostOS hostcpu hostCPU inf
   syn keyword nimBuiltin neginf nan QuitSuccess QuitFailure dbglinehook dbgLineHook stdin
@@ -219,7 +219,7 @@ if v:version >= 508 || !exists('did_nim_syn_inits')
   endif
   
   if nim_highlight_builtins == 1
-    HiLink nimBuiltin	Number
+    HiLink nimBuiltin	nimFunc
   endif
   
   if nim_highlight_exceptions == 1
@@ -232,6 +232,34 @@ if v:version >= 508 || !exists('did_nim_syn_inits')
 
   delcommand HiLink
 endif
+syn keyword PreProc or and not
+syn match PreProc        '[@]'
+syn match ocenSymbol     '[,;]'
+syn match Operator       '[\+\-\%=\/\^\&\*!?><\$|~]'
+syn match SpecialComment '[`:\.]'
+syn match Constant       '[{}\[\]()]'
+hi def nimSymbol ctermfg=DarkGray guifg=DarkGray
+" ---
+"hi def link nimBuiltin Statement
+hi def link nimFunc Function
+hi def link nimTypedef Identifier
+hi def nimType ctermfg=DarkCyan guifg=DarkCyan
+hi def nimThis ctermfg=DarkMagenta guifg=DarkMagenta
+"syn match nimAttribute '\(^\s*\[\s*\)\@<=\w\w*\ze\s*.*\]'
+syn match Repeat   "\([^\.]\.\)\@<=\w\w*\(\(\[.*\]\)*\s*(\)\@!"
+syn match nimFloat "\([0-9]\+\.\)\@<=[0-9][0-9]*\(f32\|f64\)*"
+syn match nimThis '\(\w\)\@<!this\(\w\)\@!'
+"syn match nimType '\(\sas\s\+\W*\)\@<=\w\+'
+"syn match nimType '\(\(\W\|^\)\(let\|const\|def\)\s\+[^=]*\w\s*)*\s*:\s*\W*\|^\W*\w\w*\s*:\w*\)\@<=\w\+'
+"syn match nimTypedef  contains=nimTypedef "\%([^[:cntrl:][:space:][:punct:][:digit:]]\|_\)\%([^[:cntrl:][:punct:][:space:]]\|_\)*" display contained
+"syn match nimFunc    "\%(r#\)\=\%([^[:cntrl:][:space:][:punct:][:digit:]]\|_\)\%([^[:cntrl:][:punct:][:space:]]\|_\)*" display contained
+"syn keyword nimKeyword union struct enum namespace typedef nextgroup=nimTypedef skipwhite skipempty
+"syn keyword nimKeyword union nextgroup=nimType skipwhite skipempty contained
+syn match nimFunc   "[0-9a-zA-Z_@]*\w\w*\(\(<.*>\s*\)*\(\[.*\]\)*\s*(\)\@="
+"syn match nimFunc    "\w\(\w\)*\ze\(\[.*\]\s*\)*\s*("
+"syn match nimFunc    "\w\(\w\)*<"he=e-1,me=e-1 " foo<T>();
+syn match nimType    "\w\(\w\)*\ze\(<.*>\s*\)*::[^<]"
+
 
 let b:current_syntax = 'nim'
 
